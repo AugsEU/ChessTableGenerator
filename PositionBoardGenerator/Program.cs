@@ -147,23 +147,25 @@ namespace PositionBoardGeneator
 		static void Main(string[] args)
 		{
 			// Config
-			int bitDepth = 4;
+			int bitDepth = 8;
 			// Config
 
 			// Load tables
 			int[][] tableOfTables = new int[12][];
+
 			tableOfTables[0] = mg_pawn_table;
-			tableOfTables[1] = eg_pawn_table;
-			tableOfTables[2] = mg_knight_table;
-			tableOfTables[3] = eg_knight_table;
-			tableOfTables[4] = mg_bishop_table;
-			tableOfTables[5] = eg_bishop_table;
-			tableOfTables[6] = eg_rook_table;
-			tableOfTables[7] = mg_rook_table;
-			tableOfTables[8] = eg_queen_table;
-			tableOfTables[9] = mg_queen_table;
-			tableOfTables[10] = eg_king_table;
-			tableOfTables[11] = mg_king_table;
+			tableOfTables[1] = mg_knight_table;
+			tableOfTables[2] = mg_bishop_table;
+			tableOfTables[3] = mg_rook_table;
+			tableOfTables[4] = mg_queen_table;
+			tableOfTables[5] = mg_king_table;
+
+			tableOfTables[6] = eg_pawn_table;
+			tableOfTables[7] = eg_knight_table;
+			tableOfTables[8] = eg_bishop_table;
+			tableOfTables[9] = eg_rook_table;
+			tableOfTables[10]= eg_queen_table;
+			tableOfTables[11]= eg_king_table;
 			// Load tables
 
 			int numberOfTables = tableOfTables.Length;
@@ -217,13 +219,12 @@ namespace PositionBoardGeneator
 			Console.WriteLine("Final output:");
 			for (int t = 0; t < numberOfTables; t++)
 			{
-				Console.Write("    Table {0}:", t);
 				for (int b = 0; b < bitDepth; b++)
 				{
 					string hexValue = bitTables[t][b].ToString("X16");
-					Console.Write(" {0}", hexValue);
+					Console.Write(" 0x{0},", hexValue);
 				}
-				Console.WriteLine(" | ");
+				Console.WriteLine("");
 			}
 
 			Console.ReadLine();
@@ -255,14 +256,17 @@ namespace PositionBoardGeneator
 				throw new Exception("Table invalid length.");
 			}
 
-			for(int i = 0; i < 64; ++i)
+			for (int r = 0; r < 8; ++r)
 			{
-				UInt64 tableValue = (UInt64)(minValue + table[i]);
-				for(int bit = 0; bit < bitDepth; bit++)
+				for(int f = 0; f < 8; ++f)
 				{
-					if (((1ul << bit) & tableValue) != 0)
+					UInt64 tableValue = (UInt64)(table[(8 * (7-r)) + f] - minValue);
+					for (int bit = 0; bit < bitDepth; bit++)
 					{
-						outputSequence[bit] |= (1ul << i);
+						if (((1ul << bit) & tableValue) != 0)
+						{
+							outputSequence[bit] |= (1ul << (8 * r + f));
+						}
 					}
 				}
 			}
