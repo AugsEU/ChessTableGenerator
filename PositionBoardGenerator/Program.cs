@@ -244,7 +244,7 @@ namespace PositionBoardGeneator
 				}
 			}
 
-			valueRange = maximumOfAllTables - minimumOfAllTables;
+			valueRange = maximumOfAllTables - minimumOfAllTables + 1;
 		}
 
 		static UInt64[] GetUInt64Sequence(int bitDepth, int[] table, int minValue, int maxValue)
